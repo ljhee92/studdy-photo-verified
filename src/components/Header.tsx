@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { BookOpen, Plus, Settings } from "lucide-react";
+import { BookOpen, Plus, Settings, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
@@ -27,6 +27,15 @@ export const Header = () => {
             >
               <Plus className="h-4 w-4" />
               스터디 생성
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => navigate('/my-studies')}
+              className="flex items-center gap-2"
+            >
+              <User className="h-4 w-4" />
+              내 스터디
             </Button>
             <Button 
               variant="outline" 

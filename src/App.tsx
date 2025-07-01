@@ -9,6 +9,8 @@ import { CreateStudy } from "./pages/CreateStudy";
 import { StudyDetail } from "./pages/StudyDetail";
 import { ManageStudies } from "./pages/ManageStudies";
 import { StudyManagement } from "./pages/StudyManagement";
+import { MyStudies } from "./pages/MyStudies";
+import { MyStudyDetail } from "./pages/MyStudyDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +27,8 @@ const App = () => (
           <Route path="/study/:studyId" element={<StudyDetail />} />
           <Route path="/manage" element={<ManageStudies />} />
           <Route path="/manage/:studyId" element={<StudyManagement />} />
+          <Route path="/my-studies" element={<MyStudies />} />
+          <Route path="/my-study/:studyId" element={<MyStudyDetail />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

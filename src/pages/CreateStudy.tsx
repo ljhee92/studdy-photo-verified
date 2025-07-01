@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon, Info } from "lucide-react";
-import { format } from "date-fns";
+import { format, addMonths } from "date-fns";
 import { ko } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,21 +43,22 @@ export const CreateStudy = () => {
       return;
     }
 
-    // 시작 날짜가 과거인지 확인
-    if (formData.startDate < new Date()) {
-      toast({
-        title: "날짜 오류",
-        description: "시작 날짜는 과거로 설정할 수 없습니다.",
-        variant: "destructive"
-      });
-      return;
-    }
-
     // 종료 날짜가 시작 날짜보다 이후인지 확인
     if (formData.endDate <= formData.startDate) {
       toast({
         title: "날짜 오류",
         description: "종료 날짜는 시작 날짜보다 뒤에 있어야 합니다.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // 종료 날짜가 시작 날짜로부터 3개월 이내인지 확인
+    const maxEndDate = addMonths(formData.startDate, 3);
+    if (formData.endDate > maxEndDate) {
+      toast({
+        title: "날짜 오류",
+        description: "종료 날짜는 시작 날짜로부터 최대 3개월까지만 가능합니다.",
         variant: "destructive"
       });
       return;
@@ -74,6 +75,10 @@ export const CreateStudy = () => {
     setTimeout(() => {
       navigate('/');
     }, 2000);
+  };
+
+  const getMaxEndDate = () => {
+    return formData.startDate ? addMonths(formData.startDate, 3) : undefined;
   };
 
   return (
@@ -160,8 +165,8 @@ export const CreateStudy = () => {
                         <Calendar
                           mode="single"
                           selected={formData.startDate}
-                          onSelect={(date) => setFormData({ ...formData, startDate: date })}
-                          disabled={(date) => date < new Date()}
+                          onSelect={(date) => setFormData({ ...formData, startDate: date, endDate: undefined })}
+                          disabled={(date) => date < new Date().setHours(0, 0, 0, 0)}
                           initialFocus
                           className="pointer-events-auto"
                         />
@@ -189,12 +194,21 @@ export const CreateStudy = () => {
                           mode="single"
                           selected={formData.endDate}
                           onSelect={(date) => setFormData({ ...formData, endDate: date })}
-                          disabled={(date) => date < new Date()}
+                          disabled={(date) => {
+                            if (!formData.startDate) return true;
+                            const maxDate = getMaxEndDate();
+                            return date <= formData.startDate || (maxDate && date > maxDate);
+                          }}
                           initialFocus
                           className="pointer-events-auto"
                         />
                       </PopoverContent>
                     </Popover>
+                    {formData.startDate && (
+                      <p className="text-xs text-muted-foreground">
+                        최대 {format(getMaxEndDate()!, "PPP", { locale: ko })}까지 가능
+                      </p>
+                    )}
                   </div>
                 </div>
 
