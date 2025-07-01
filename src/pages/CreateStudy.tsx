@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
@@ -80,6 +79,9 @@ export const CreateStudy = () => {
   const getMaxEndDate = () => {
     return formData.startDate ? addMonths(formData.startDate, 3) : undefined;
   };
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -166,7 +168,7 @@ export const CreateStudy = () => {
                           mode="single"
                           selected={formData.startDate}
                           onSelect={(date) => setFormData({ ...formData, startDate: date, endDate: undefined })}
-                          disabled={(date) => date < new Date().setHours(0, 0, 0, 0)}
+                          disabled={(date) => date < today}
                           initialFocus
                           className="pointer-events-auto"
                         />
