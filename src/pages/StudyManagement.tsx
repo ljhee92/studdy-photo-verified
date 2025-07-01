@@ -117,7 +117,7 @@ export const StudyManagement = () => {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <Won className="h-5 w-5 text-muted-foreground" />
+                  <DollarSign className="h-5 w-5 text-muted-foreground" />
                   <span>{study.participantFee.toLocaleString()}원</span>
                 </div>
                 
