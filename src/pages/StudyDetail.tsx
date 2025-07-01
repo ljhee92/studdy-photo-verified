@@ -5,7 +5,7 @@ import { Header } from "../components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Users, Won, Clock, User, ArrowLeft } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, User, ArrowLeft } from "lucide-react";
 import { mockStudies } from "../data/mockData";
 import { toast } from "@/hooks/use-toast";
 

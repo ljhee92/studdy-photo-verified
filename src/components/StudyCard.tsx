@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Users, Won, Clock } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock } from "lucide-react";
 import { Study } from "../types/study";
 
 interface StudyCardProps {
@@ -58,7 +58,7 @@ export const StudyCard = ({ study, onViewDetails, showJoinButton = true }: Study
               <span>{study.currentParticipants}/{study.maxParticipants}명</span>
             </div>
             <div className="flex items-center gap-1">
-              <Won className="h-4 w-4" />
+              <DollarSign className="h-4 w-4" />
               <span>{study.participantFee.toLocaleString()}원</span>
             </div>
           </div>
