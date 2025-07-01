@@ -3,7 +3,7 @@
 
 ## 배포 URL
 - https://studdy-study-with-buddy.lovable.app/
-- 
+
 ## 🌟 프로젝트 소개
 
 **Studdy**는 학습을 위한 스터디를 효율적이고 신뢰성 있게 모집하고 관리할 수 있도록 돕는 웹 서비스입니다.  
