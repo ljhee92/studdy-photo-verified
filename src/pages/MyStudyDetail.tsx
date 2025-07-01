@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
@@ -8,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Users, DollarSign, Clock, ArrowLeft, Upload, CheckCircle, XCircle, AlertCircle, Banknote } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Calendar, Users, DollarSign, Clock, ArrowLeft, Upload, CheckCircle, XCircle, AlertCircle, Banknote, Camera } from "lucide-react";
 import { mockMyStudies } from "../data/mockData";
 import { toast } from "@/hooks/use-toast";
 
@@ -17,6 +17,7 @@ export const MyStudyDetail = () => {
   const navigate = useNavigate();
   const [accountNumber, setAccountNumber] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   const study = mockMyStudies.find(s => s.id === studyId);
   const currentUser = study?.participants.find(p => p.id === "user2");
@@ -35,6 +36,7 @@ export const MyStudyDetail = () => {
     );
   }
 
+  
   const getStatusBadge = (status: string) => {
     const statusMap = {
       recruiting: { label: '모집 중', variant: 'default' as const },
@@ -83,10 +85,12 @@ export const MyStudyDetail = () => {
         description: "스터디 인증이 제출되었습니다. 주최자의 승인을 기다려주세요.",
       });
       setIsUploading(false);
+      setIsDialogOpen(false);
     }, 2000);
   };
 
   const handleResubmit = (verificationId: string) => {
+    setIsDialogOpen(true);
     toast({
       title: "재인증 요청",
       description: "새로운 인증 사진을 업로드해주세요.",
@@ -139,6 +143,7 @@ export const MyStudyDetail = () => {
             </Button>
           </div>
 
+          
           <Card className="mb-8">
             <CardHeader>
               <div className="flex justify-between items-start">
@@ -200,26 +205,46 @@ export const MyStudyDetail = () => {
                         </p>
                       </div>
                       
-                      <div>
-                        <Label htmlFor="verification-upload" className="block mb-2">
-                          인증 사진 업로드
-                        </Label>
-                        <input
-                          id="verification-upload"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileUpload}
-                          disabled={isUploading}
-                          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                        />
-                      </div>
-                      
-                      {isUploading && (
-                        <div className="flex items-center gap-2 text-blue-600">
-                          <Upload className="h-4 w-4 animate-spin" />
-                          업로드 중...
-                        </div>
-                      )}
+                      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button className="flex items-center gap-2">
+                            <Camera className="h-4 w-4" />
+                            인증 사진 업로드
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>스터디 인증 사진 업로드</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div className="p-4 bg-blue-50 rounded-lg">
+                              <p className="text-sm text-blue-800">
+                                메타데이터가 포함된 사진을 업로드해주세요. 주최자가 사진의 촬영 시간을 확인하여 인증을 승인합니다.
+                              </p>
+                            </div>
+                            <div>
+                              <Label htmlFor="verification-upload" className="block mb-2">
+                                인증 사진 선택
+                              </Label>
+                              <input
+                                id="verification-upload"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileUpload}
+                                disabled={isUploading}
+                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                              />
+                            </div>
+                            
+                            {isUploading && (
+                              <div className="flex items-center gap-2 text-blue-600">
+                                <Upload className="h-4 w-4 animate-spin" />
+                                업로드 중...
+                              </div>
+                            )}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </CardContent>
                 </Card>
@@ -261,6 +286,17 @@ export const MyStudyDetail = () => {
                               )}
                             </div>
                             
+                            {/* 업로드된 이미지 표시 */}
+                            {verification.imageUrl && (
+                              <div className="mb-3">
+                                <img 
+                                  src={verification.imageUrl} 
+                                  alt="인증 사진" 
+                                  className="max-w-xs h-32 object-cover rounded-lg border"
+                                />
+                              </div>
+                            )}
+                            
                             <p className="text-sm text-muted-foreground">
                               촬영 시간: {formatDateTime(verification.capturedAt)}
                             </p>
@@ -284,6 +320,7 @@ export const MyStudyDetail = () => {
                 </CardContent>
               </Card>
             </TabsContent>
+            
             
             {isCompleted && canReceiveRefund && (
               <TabsContent value="refund">

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
@@ -11,7 +10,7 @@ import { mockMyStudies } from "../data/mockData";
 export const MyStudies = () => {
   const navigate = useNavigate();
   const [studies] = useState(mockMyStudies.filter(study => 
-    study.participants.some(p => p.id === "user2") // 현재 사용자가 참여한 스터디만
+    study.participants.some(p => p.id === "user2") && study.status === 'ongoing' // 진행 중인 스터디만
   ));
 
   const getStatusBadge = (status: string) => {
@@ -56,7 +55,7 @@ export const MyStudies = () => {
           {studies.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-lg text-muted-foreground mb-4">
-                참여 중인 스터디가 없습니다.
+                진행 중인 스터디가 없습니다.
               </p>
               <Button onClick={() => navigate('/')}>
                 스터디 찾아보기
