@@ -1,5 +1,5 @@
 # Let's Study, Buddy! Studdy!
-신뢰할 수 있는 스터디를 모집 및 관리 서비스 `Studdy`
+신뢰할 수 있는 스터디 모집 및 관리 서비스 `Studdy`
 
 ## 배포 URL
 - https://studdy-photo-verified.lovable.app/
