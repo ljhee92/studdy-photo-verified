@@ -6,11 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ShoppingCart, Coins, Gift, CheckCircle } from "lucide-react";
-import { mockGiftCards, mockCurrentUser } from "../data/mockPointData";
+import { mockGiftCards } from "../data/mockPointData";
+import { usePointContext } from "../contexts/PointContext";
 import { toast } from "@/hooks/use-toast";
 
 export const Shop = () => {
-  const [userPoints, setUserPoints] = useState(mockCurrentUser.points);
+  const { userPoints, setUserPoints, user } = usePointContext();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedGiftCard, setSelectedGiftCard] = useState<any>(null);
 
@@ -24,7 +25,7 @@ export const Shop = () => {
       return;
     }
 
-    setUserPoints(prev => prev - giftCard.price);
+    setUserPoints(userPoints - giftCard.price);
     setIsDialogOpen(false);
     
     toast({
@@ -134,7 +135,7 @@ export const Shop = () => {
                       </span>
                     </div>
                     <p className="text-sm text-blue-700">
-                      휴대폰 번호: {mockCurrentUser.phone}
+                      휴대폰 번호: {user.phone}
                     </p>
                     <p className="text-xs text-blue-600 mt-1">
                       기프티콘이 문자로 전송됩니다.

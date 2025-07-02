@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { BookOpen, Plus, Settings, User, ShoppingBag } from "lucide-react";
+import { BookOpen, Plus, Settings, User, ShoppingBag, UserCog } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PointDisplay } from "./PointDisplay";
 
@@ -58,6 +58,15 @@ export const Header = () => {
               >
                 <ShoppingBag className="h-3 w-3 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">상점</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/profile')}
+                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base px-2 sm:px-4"
+              >
+                <UserCog className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">내 정보</span>
               </Button>
             </nav>
           </div>
