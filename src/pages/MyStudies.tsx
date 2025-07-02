@@ -4,7 +4,7 @@ import { Header } from "../components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Users, DollarSign, Clock, Eye } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, Eye, Banknote } from "lucide-react";
 import { mockMyStudies } from "../data/mockData";
 
 export const MyStudies = () => {
@@ -89,7 +89,7 @@ export const MyStudies = () => {
                         </div>
                         
                         <div className="flex items-center gap-2">
-                          <DollarSign className="h-4 w-4 text-muted-foreground" />
+                          <Banknote className="h-4 w-4 text-muted-foreground" />
                           <span className="text-sm">{study.participantFee.toLocaleString()}원</span>
                         </div>
                         

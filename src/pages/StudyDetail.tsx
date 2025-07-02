@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Users, DollarSign, Clock, User, ArrowLeft } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, User, ArrowLeft, Banknote } from "lucide-react";
 import { mockStudies } from "../data/mockData";
 import { toast } from "@/hooks/use-toast";
 
@@ -127,7 +126,7 @@ export const StudyDetail = () => {
                       </div>
                       
                       <div className="flex items-center gap-3">
-                        <DollarSign className="h-5 w-5 text-muted-foreground" />
+                        <Banknote className="h-5 w-5 text-muted-foreground" />
                         <span>참가비: {study.participantFee.toLocaleString()}원</span>
                       </div>
                       

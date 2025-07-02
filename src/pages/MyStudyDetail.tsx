@@ -165,7 +165,7 @@ export const MyStudyDetail = () => {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <DollarSign className="h-5 w-5 text-muted-foreground" />
+                  <Banknote className="h-5 w-5 text-muted-foreground" />
                   <span>{study.participantFee.toLocaleString()}원</span>
                 </div>
                 
