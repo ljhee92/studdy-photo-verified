@@ -1,6 +1,8 @@
+
 import { Button } from "@/components/ui/button";
-import { BookOpen, Plus, Settings, User } from "lucide-react";
+import { BookOpen, Plus, Settings, User, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { PointDisplay } from "./PointDisplay";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -17,35 +19,48 @@ export const Header = () => {
             <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Studdy</h1>
           </div>
           
-          <nav className="flex items-center gap-1 sm:gap-3">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate('/create')}
-              className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base px-2 sm:px-4"
-            >
-              <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
-              스터디 생성
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate('/my-studies')}
-              className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base px-2 sm:px-4"
-            >
-              <User className="h-3 w-3 sm:h-4 sm:w-4" />
-              내 스터디
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate('/manage')}
-              className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base px-2 sm:px-4"
-            >
-              <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
-              스터디 관리
-            </Button>
-          </nav>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <PointDisplay />
+            
+            <nav className="flex items-center gap-1 sm:gap-3">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/create')}
+                className="hidden sm:flex items-center gap-2 text-xs sm:text-base px-2 sm:px-4"
+              >
+                <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                스터디 생성
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/my-studies')}
+                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base px-2 sm:px-4"
+              >
+                <User className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">내 스터디</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/manage')}
+                className="hidden sm:flex items-center gap-2 text-xs sm:text-base px-2 sm:px-4"
+              >
+                <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
+                스터디 관리
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/shop')}
+                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base px-2 sm:px-4"
+              >
+                <ShoppingBag className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">상점</span>
+              </Button>
+            </nav>
+          </div>
         </div>
       </div>
     </header>
