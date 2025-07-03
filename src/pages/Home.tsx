@@ -1,24 +1,28 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Header } from "../components/Header";
 import { SearchBar } from "../components/SearchBar";
 import { StudyCard } from "../components/StudyCard";
-import { mockStudies } from "../data/mockData";
 import { Study } from "../types/study";
 import { useNavigate } from "react-router-dom";
+import { useStudyStore } from "@/store/studyStore";
 
 export const Home = () => {
-  const [filteredStudies, setFilteredStudies] = useState<Study[]>(
-    mockStudies.filter(study => study.status === 'recruiting')
-  );
+  const { studies } = useStudyStore();
+  const [filteredStudies, setFilteredStudies] = useState<Study[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setFilteredStudies(studies.filter(study => study.status === 'recruiting'));
+  }, [studies]);
 
   const handleSearch = (query: string) => {
     if (!query.trim()) {
-      setFilteredStudies(mockStudies.filter(study => study.status === 'recruiting'));
+      setFilteredStudies(studies.filter(study => study.status === 'recruiting'));
       return;
     }
 
-    const filtered = mockStudies.filter(study => 
+    const filtered = studies.filter(study => 
       study.status === 'recruiting' && 
       (study.title.toLowerCase().includes(query.toLowerCase()) ||
        study.description.toLowerCase().includes(query.toLowerCase()))

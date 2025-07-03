@@ -1,18 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Users, DollarSign, Clock, Eye, Banknote, Settings, StopCircle } from "lucide-react";
-import { mockMyStudies } from "../data/mockData";
+import { useStudyStore } from "@/store/studyStore";
 
 export const MyStudies = () => {
   const navigate = useNavigate();
+  const { myStudies } = useStudyStore();
   const currentUserId = "user2"; // This would come from auth context in real app
-  const [studies] = useState(mockMyStudies.filter(study => 
-    study.participants.some(p => p.id === currentUserId) && study.status === 'ongoing'
-  ));
+  const [studies, setStudies] = useState(
+    myStudies.filter(study => 
+      study.participants.some(p => p.id === currentUserId) && study.status === 'ongoing'
+    )
+  );
+
+  useEffect(() => {
+    setStudies(
+      myStudies.filter(study => 
+        study.participants.some(p => p.id === currentUserId) && study.status === 'ongoing'
+      )
+    );
+  }, [myStudies]);
 
   const getStatusBadge = (status: string) => {
     const statusMap = {

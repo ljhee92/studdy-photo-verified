@@ -14,9 +14,12 @@ import { ko } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
+import { PaymentConfirmDialog } from "@/components/PaymentConfirmDialog";
+import { useStudyStore } from "@/store/studyStore";
 
 export const CreateStudy = () => {
   const navigate = useNavigate();
+  const { addStudy } = useStudyStore();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -26,6 +29,7 @@ export const CreateStudy = () => {
     endDate: undefined as Date | undefined,
     verificationFrequency: ""
   });
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +67,42 @@ export const CreateStudy = () => {
       return;
     }
 
+    // 결제 동의 창 띄우기
+    setShowPaymentDialog(true);
+  };
+
+  const handlePaymentConfirm = () => {
+    setShowPaymentDialog(false);
+    
+    // 새 스터디 생성
+    const newStudy = {
+      id: `study-${Date.now()}`,
+      title: formData.title,
+      description: formData.description,
+      maxParticipants: parseInt(formData.maxParticipants),
+      currentParticipants: 1, // 주최자 포함
+      participantFee: parseInt(formData.participantFee),
+      startDate: formData.startDate!.toISOString().split('T')[0],
+      endDate: formData.endDate!.toISOString().split('T')[0],
+      verificationFrequency: parseInt(formData.verificationFrequency),
+      status: 'recruiting' as const,
+      organizer: {
+        id: "user2", // 현재 로그인한 사용자 ID
+        name: "김철수",
+        trustworthiness: 85
+      },
+      participants: [{
+        id: "user2",
+        name: "김철수",
+        joinedAt: new Date().toISOString(),
+        trustworthiness: 85,
+        verifications: []
+      }]
+    };
+
+    // 스터디 추가
+    addStudy(newStudy);
+
     console.log("스터디 생성 데이터:", formData);
     
     toast({
@@ -95,6 +135,7 @@ export const CreateStudy = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
+                
                 <div className="space-y-2">
                   <Label htmlFor="title">스터디 제목 *</Label>
                   <Input
@@ -255,6 +296,14 @@ export const CreateStudy = () => {
           </Card>
         </div>
       </main>
+
+      <PaymentConfirmDialog
+        isOpen={showPaymentDialog}
+        onClose={() => setShowPaymentDialog(false)}
+        onConfirm={handlePaymentConfirm}
+        amount={parseInt(formData.participantFee) || 0}
+        title={formData.title}
+      />
     </div>
   );
 };
