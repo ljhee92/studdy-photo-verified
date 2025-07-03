@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
@@ -9,9 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Calendar, Users, DollarSign, Clock, ArrowLeft, Upload, CheckCircle, XCircle, AlertCircle, Banknote, Camera } from "lucide-react";
-import { mockMyStudies } from "../data/mockData";
 import { toast } from "@/hooks/use-toast";
 import { TrustworthinessDisplay } from "../components/TrustworthinessDisplay";
+import { useStudyStore } from "@/store/studyStore";
 
 export const MyStudyDetail = () => {
   const { studyId } = useParams();
@@ -19,9 +20,11 @@ export const MyStudyDetail = () => {
   const [accountNumber, setAccountNumber] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { getStudyById } = useStudyStore();
   
-  const study = mockMyStudies.find(s => s.id === studyId);
-  const currentUser = study?.participants.find(p => p.id === "user2");
+  const study = getStudyById(studyId!);
+  const currentUserId = "user2"; // This would come from auth context in real app
+  const currentUser = study?.participants.find(p => p.id === currentUserId);
   
   if (!study) {
     return (
@@ -345,10 +348,10 @@ export const MyStudyDetail = () => {
                               <TrustworthinessDisplay score={participant.trustworthiness} />
                             </div>
                             <div className="flex items-center gap-2">
-                              {index === 0 && (
+                              {study.organizer.id === participant.id && (
                                 <Badge variant="outline" className="text-xs">주최자</Badge>
                               )}
-                              {participant.id === "user2" && (
+                              {participant.id === currentUserId && (
                                 <Badge variant="secondary" className="text-xs">나</Badge>
                               )}
                             </div>

@@ -5,18 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Users, DollarSign, Clock, User, ArrowLeft, Banknote } from "lucide-react";
-import { mockStudies } from "../data/mockData";
 import { toast } from "@/hooks/use-toast";
 import { TrustworthinessDisplay } from "../components/TrustworthinessDisplay";
 import { PaymentConfirmDialog } from "../components/PaymentConfirmDialog";
+import { useStudyStore } from "@/store/studyStore";
 
 export const StudyDetail = () => {
   const { studyId } = useParams();
   const navigate = useNavigate();
   const [isJoining, setIsJoining] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const { getStudyById, joinStudy } = useStudyStore();
   
-  const study = mockStudies.find(s => s.id === studyId);
+  const study = getStudyById(studyId!);
+  const currentUserId = "user2"; // This would come from auth context in real app
 
   if (!study) {
     return (
@@ -31,6 +33,11 @@ export const StudyDetail = () => {
       </div>
     );
   }
+
+  // 현재 사용자가 이미 참여중인지 확인
+  const isAlreadyParticipant = study.participants.some(p => p.id === currentUserId);
+  // 현재 사용자가 주최자인지 확인
+  const isOrganizer = study.organizer.id === currentUserId;
 
   const getStatusBadge = (status: typeof study.status) => {
     const statusMap = {
@@ -63,6 +70,25 @@ export const StudyDetail = () => {
       });
       return;
     }
+
+    if (isAlreadyParticipant) {
+      toast({
+        title: "참가 불가",
+        description: "이미 참여중인 스터디입니다.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (isOrganizer) {
+      toast({
+        title: "참가 불가",  
+        description: "본인이 주최한 스터디입니다.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setShowPaymentDialog(true);
   };
 
@@ -72,6 +98,16 @@ export const StudyDetail = () => {
     
     // 결제 시뮬레이션
     setTimeout(() => {
+      const newParticipant = {
+        id: currentUserId,
+        name: "사용자2", // This would come from auth context
+        joinedAt: new Date().toISOString(),
+        trustworthiness: 85,
+        verifications: []
+      };
+
+      joinStudy(study.id, newParticipant);
+
       toast({
         title: "스터디 참가 완료",
         description: `"${study.title}" 스터디에 참가했습니다. 참가비 ${study.participantFee.toLocaleString()}원이 결제되었습니다.`,
@@ -87,6 +123,7 @@ export const StudyDetail = () => {
 
   const statusInfo = getStatusBadge(study.status);
   const isRecruitingFull = study.currentParticipants >= study.maxParticipants;
+  const canJoin = study.status === 'recruiting' && !isRecruitingFull && !isAlreadyParticipant && !isOrganizer;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -200,17 +237,21 @@ export const StudyDetail = () => {
                         className="w-full" 
                         size="lg"
                         onClick={handleJoinClick}
-                        disabled={isRecruitingFull || isJoining}
+                        disabled={!canJoin || isJoining}
                       >
                         {isJoining 
                           ? "참가 처리 중..." 
+                          : isOrganizer
+                            ? "본인이 주최한 스터디입니다"
+                          : isAlreadyParticipant
+                            ? "이미 참여중인 스터디입니다"
                           : isRecruitingFull 
                             ? "모집 완료" 
                             : `참가하기 (${study.participantFee.toLocaleString()}원)`
                         }
                       </Button>
                       
-                      {!isRecruitingFull && (
+                      {canJoin && (
                         <p className="text-sm text-muted-foreground text-center mt-2">
                           참가 시 참가비가 결제되며, 성공하면 서비스 내 포인트로 전액 환급됩니다. 
                           실패 시 일부는 기부 및 운영비로 사용됩니다.

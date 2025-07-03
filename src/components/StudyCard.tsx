@@ -12,6 +12,13 @@ interface StudyCardProps {
 }
 
 export const StudyCard = ({ study, onViewDetails, showJoinButton = true }: StudyCardProps) => {
+  const currentUserId = "user2"; // This would come from auth context in real app
+  
+  // 현재 사용자가 이미 참여중인지 확인
+  const isAlreadyParticipant = study.participants.some(p => p.id === currentUserId);
+  // 현재 사용자가 주최자인지 확인
+  const isOrganizer = study.organizer.id === currentUserId;
+
   const getStatusBadge = (status: Study['status']) => {
     const statusMap = {
       recruiting: { label: '모집 중', variant: 'default' as const },
@@ -34,6 +41,8 @@ export const StudyCard = ({ study, onViewDetails, showJoinButton = true }: Study
   };
 
   const statusInfo = getStatusBadge(study.status);
+  const isRecruitingFull = study.currentParticipants >= study.maxParticipants;
+  const canJoin = study.status === 'recruiting' && !isRecruitingFull && !isAlreadyParticipant && !isOrganizer;
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-200 border-l-4 border-l-blue-500">
@@ -95,9 +104,16 @@ export const StudyCard = ({ study, onViewDetails, showJoinButton = true }: Study
                   size="sm"
                   className="text-xs md:text-sm px-2 md:px-4"
                   onClick={() => onViewDetails(study.id)}
-                  disabled={study.currentParticipants >= study.maxParticipants}
+                  disabled={!canJoin}
                 >
-                  참가하기
+                  {isOrganizer 
+                    ? "내 스터디" 
+                    : isAlreadyParticipant 
+                      ? "참여중" 
+                      : isRecruitingFull 
+                        ? "모집완료" 
+                        : "참가하기"
+                  }
                 </Button>
               )}
             </div>
