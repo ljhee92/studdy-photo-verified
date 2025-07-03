@@ -1,4 +1,3 @@
-
 export interface TrustworthinessBadge {
   level: 'bronze' | 'silver' | 'gold' | 'platinum';
   score: number;
@@ -12,32 +11,32 @@ export const getTrustworthinessBadge = (score: number): TrustworthinessBadge => 
     return {
       level: 'platinum',
       score,
-      label: '플래티넘',
-      color: '#a855f7',
+      label: 'Verified',
+      color: '#3b82f6',
       icon: 'shield-check'
     };
   } else if (score >= 70) {
     return {
       level: 'gold',
       score,
-      label: '골드',
-      color: '#eab308',
+      label: 'Trusted',
+      color: '#22c55e',
       icon: 'badge-check'
     };
   } else if (score >= 50) {
     return {
       level: 'silver',
       score,
-      label: '실버',
-      color: '#6b7280',
+      label: 'Moderate',
+      color: '#facc15',
       icon: 'star'
     };
   } else {
     return {
       level: 'bronze',
       score,
-      label: '브론즈',
-      color: '#cd7c0f',
+      label: 'Low',
+      color: '#ef4444',
       icon: 'star-half'
     };
   }
