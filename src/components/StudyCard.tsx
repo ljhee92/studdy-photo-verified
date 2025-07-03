@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, DollarSign, Clock, Banknote } from "lucide-react";
 import { Study } from "../types/study";
+import { TrustworthinessDisplay } from "./TrustworthinessDisplay";
 
 interface StudyCardProps {
   study: Study;
@@ -74,9 +75,12 @@ export const StudyCard = ({ study, onViewDetails, showJoinButton = true }: Study
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pt-2 md:pt-3 gap-2 sm:gap-0">
-            <span className="text-xs md:text-sm text-muted-foreground">
-              주최: {study.organizer.name}
-            </span>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs md:text-sm text-muted-foreground">
+                주최: {study.organizer.name}
+              </span>
+              <TrustworthinessDisplay score={study.organizer.trustworthiness} />
+            </div>
             <div className="flex gap-1 md:gap-2">
               <Button 
                 variant="outline" 

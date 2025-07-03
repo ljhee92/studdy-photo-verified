@@ -13,6 +13,7 @@ export interface Study {
   organizer: {
     id: string;
     name: string;
+    trustworthiness: number;
   };
   participants: Participant[];
 }
@@ -21,6 +22,7 @@ export interface Participant {
   id: string;
   name: string;
   joinedAt: string;
+  trustworthiness: number;
   verifications: Verification[];
 }
 

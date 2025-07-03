@@ -7,11 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Users, DollarSign, Clock, User, ArrowLeft, Banknote } from "lucide-react";
 import { mockStudies } from "../data/mockData";
 import { toast } from "@/hooks/use-toast";
+import { TrustworthinessDisplay } from "../components/TrustworthinessDisplay";
+import { PaymentConfirmDialog } from "../components/PaymentConfirmDialog";
 
 export const StudyDetail = () => {
   const { studyId } = useParams();
   const navigate = useNavigate();
   const [isJoining, setIsJoining] = useState(false);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   
   const study = mockStudies.find(s => s.id === studyId);
 
@@ -51,7 +54,7 @@ export const StudyDetail = () => {
     return days === 1 ? '매일 인증' : `${days}일마다 인증`;
   };
 
-  const handleJoin = async () => {
+  const handleJoinClick = () => {
     if (study.currentParticipants >= study.maxParticipants) {
       toast({
         title: "참가 불가",
@@ -60,7 +63,11 @@ export const StudyDetail = () => {
       });
       return;
     }
+    setShowPaymentDialog(true);
+  };
 
+  const handlePaymentConfirm = async () => {
+    setShowPaymentDialog(false);
     setIsJoining(true);
     
     // 결제 시뮬레이션
@@ -143,6 +150,7 @@ export const StudyDetail = () => {
                       <div className="flex items-center gap-3">
                         <User className="h-5 w-5 text-muted-foreground" />
                         <span>주최자: {study.organizer.name}</span>
+                        <TrustworthinessDisplay score={study.organizer.trustworthiness} />
                       </div>
                     </div>
                   </div>
@@ -168,10 +176,13 @@ export const StudyDetail = () => {
                                 {participant.name.charAt(0)}
                               </span>
                             </div>
-                            <div>
-                              <span className="font-medium">{participant.name}</span>
+                            <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium">{participant.name}</span>
+                                <TrustworthinessDisplay score={participant.trustworthiness} />
+                              </div>
                               {index === 0 && (
-                                <Badge variant="outline" className="ml-2 text-xs">주최자</Badge>
+                                <Badge variant="outline" className="text-xs w-fit">주최자</Badge>
                               )}
                             </div>
                           </div>
@@ -188,7 +199,7 @@ export const StudyDetail = () => {
                       <Button 
                         className="w-full" 
                         size="lg"
-                        onClick={handleJoin}
+                        onClick={handleJoinClick}
                         disabled={isRecruitingFull || isJoining}
                       >
                         {isJoining 
@@ -201,7 +212,8 @@ export const StudyDetail = () => {
                       
                       {!isRecruitingFull && (
                         <p className="text-sm text-muted-foreground text-center mt-2">
-                          참가 버튼을 클릭하면 참가비가 결제됩니다.
+                          참가 시 참가비가 결제되며, 성공하면 서비스 내 포인트로 전액 환급됩니다. 
+                          실패 시 일부는 기부 및 운영비로 사용됩니다.
                         </p>
                       )}
                     </div>
@@ -212,6 +224,14 @@ export const StudyDetail = () => {
           </Card>
         </div>
       </main>
+
+      <PaymentConfirmDialog
+        isOpen={showPaymentDialog}
+        onClose={() => setShowPaymentDialog(false)}
+        onConfirm={handlePaymentConfirm}
+        amount={study.participantFee}
+        title={study.title}
+      />
     </div>
   );
 };

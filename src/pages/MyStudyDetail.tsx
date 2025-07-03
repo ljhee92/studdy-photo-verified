@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Calendar, Users, DollarSign, Clock, ArrowLeft, Upload, CheckCircle, XCircle, AlertCircle, Banknote, Camera } from "lucide-react";
 import { mockMyStudies } from "../data/mockData";
 import { toast } from "@/hooks/use-toast";
+import { TrustworthinessDisplay } from "../components/TrustworthinessDisplay";
 
 export const MyStudyDetail = () => {
   const { studyId } = useParams();
@@ -185,10 +186,12 @@ export const MyStudyDetail = () => {
           <Tabs defaultValue="verification" className="space-y-4">
             <TabsList>
               <TabsTrigger value="verification">인증 관리</TabsTrigger>
+              <TabsTrigger value="participants">참여자 목록</TabsTrigger>
               {isCompleted && canReceiveRefund && (
                 <TabsTrigger value="refund">환급 신청</TabsTrigger>
               )}
             </TabsList>
+            
             
             <TabsContent value="verification" className="space-y-4">
               {study.status === 'ongoing' && (
@@ -317,6 +320,46 @@ export const MyStudyDetail = () => {
                       </p>
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="participants" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">참여자 목록</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {study.participants.map((participant, index) => (
+                      <div key={participant.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-medium text-blue-600">
+                              {participant.name.charAt(0)}
+                            </span>
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-medium">{participant.name}</span>
+                              <TrustworthinessDisplay score={participant.trustworthiness} />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {index === 0 && (
+                                <Badge variant="outline" className="text-xs">주최자</Badge>
+                              )}
+                              {participant.id === "user2" && (
+                                <Badge variant="secondary" className="text-xs">나</Badge>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          {new Date(participant.joinedAt).toLocaleDateString('ko-KR')} 참가
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

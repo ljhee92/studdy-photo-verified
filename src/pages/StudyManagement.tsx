@@ -9,6 +9,7 @@ import { Calendar, Users, DollarSign, Clock, ArrowLeft, CheckCircle, XCircle, Im
 import { mockMyStudies } from "../data/mockData";
 import { Participant, Verification } from "../types/study";
 import { toast } from "@/hooks/use-toast";
+import { TrustworthinessDisplay } from "../components/TrustworthinessDisplay";
 
 export const StudyManagement = () => {
   const { studyId } = useParams();
@@ -24,7 +25,7 @@ export const StudyManagement = () => {
         <main className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">스터디를 찾을 수 없습니다</h2>
-            <Button onClick={() => navigate('/manage')}>관리 목록으로 돌아가기</Button>
+            <Button onClick={() => navigate('/my-studies')}>내 스터디로 돌아가기</Button>
           </div>
         </main>
       </div>
@@ -94,11 +95,11 @@ export const StudyManagement = () => {
           <div className="mb-6">
             <Button 
               variant="ghost" 
-              onClick={() => navigate('/manage')}
+              onClick={() => navigate('/my-studies')}
               className="flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
-              스터디 관리 목록으로
+              내 스터디로
             </Button>
           </div>
 
@@ -152,7 +153,10 @@ export const StudyManagement = () => {
                             </span>
                           </div>
                           <div>
-                            <h3 className="font-semibold">{participant.name}</h3>
+                            <div className="flex items-center gap-2 mb-1">
+                              <h3 className="font-semibold">{participant.name}</h3>
+                              <TrustworthinessDisplay score={participant.trustworthiness} />
+                            </div>
                             <p className="text-sm text-muted-foreground">
                               {formatDate(participant.joinedAt)} 참가
                             </p>

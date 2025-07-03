@@ -4,13 +4,14 @@ import { Header } from "../components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Users, DollarSign, Clock, Eye, Banknote } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, Eye, Banknote, Settings, StopCircle } from "lucide-react";
 import { mockMyStudies } from "../data/mockData";
 
 export const MyStudies = () => {
   const navigate = useNavigate();
+  const currentUserId = "user2"; // This would come from auth context in real app
   const [studies] = useState(mockMyStudies.filter(study => 
-    study.participants.some(p => p.id === "user2") && study.status === 'ongoing' // 진행 중인 스터디만
+    study.participants.some(p => p.id === currentUserId) && study.status === 'ongoing'
   ));
 
   const getStatusBadge = (status: string) => {
@@ -39,6 +40,19 @@ export const MyStudies = () => {
     navigate(`/my-study/${studyId}`);
   };
 
+  const handleManageStudy = (studyId: string) => {
+    navigate(`/manage/${studyId}`);
+  };
+
+  const handleStopStudy = (studyId: string) => {
+    // This would show a confirmation dialog in a real app
+    console.log("Stop study:", studyId);
+  };
+
+  const isOrganizer = (study: any) => {
+    return study.organizer.id === currentUserId;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -65,6 +79,8 @@ export const MyStudies = () => {
             <div className="grid gap-6">
               {studies.map((study) => {
                 const statusInfo = getStatusBadge(study.status);
+                const isOrganizerUser = isOrganizer(study);
+                
                 return (
                   <Card key={study.id} className="hover:shadow-lg transition-shadow">
                     <CardHeader>
@@ -75,6 +91,11 @@ export const MyStudies = () => {
                             <Badge variant={statusInfo.variant}>
                               {statusInfo.label}
                             </Badge>
+                            {isOrganizerUser && (
+                              <Badge variant="outline" className="text-blue-600 border-blue-600">
+                                주최자
+                              </Badge>
+                            )}
                           </div>
                           <p className="text-muted-foreground">{study.description}</p>
                         </div>
@@ -104,7 +125,7 @@ export const MyStudies = () => {
                         </div>
                       </div>
                       
-                      <div className="flex justify-end">
+                      <div className="flex justify-end gap-2">
                         <Button 
                           onClick={() => handleViewStudy(study.id)}
                           className="flex items-center gap-2"
@@ -112,6 +133,27 @@ export const MyStudies = () => {
                           <Eye className="h-4 w-4" />
                           상세보기
                         </Button>
+                        
+                        {isOrganizerUser && (
+                          <>
+                            <Button 
+                              variant="outline"
+                              onClick={() => handleManageStudy(study.id)}
+                              className="flex items-center gap-2"
+                            >
+                              <Settings className="h-4 w-4" />
+                              상세 관리
+                            </Button>
+                            <Button 
+                              variant="destructive"
+                              onClick={() => handleStopStudy(study.id)}
+                              className="flex items-center gap-2"
+                            >
+                              <StopCircle className="h-4 w-4" />
+                              스터디 중단
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
