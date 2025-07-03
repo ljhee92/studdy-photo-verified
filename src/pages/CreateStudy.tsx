@@ -16,10 +16,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { PaymentConfirmDialog } from "@/components/PaymentConfirmDialog";
 import { useStudyStore } from "@/store/studyStore";
+import { useUser } from "../contexts/UserContext";
 
 export const CreateStudy = () => {
   const navigate = useNavigate();
   const { addStudy } = useStudyStore();
+  const { name } = useUser();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -88,12 +90,12 @@ export const CreateStudy = () => {
       status: 'recruiting' as const,
       organizer: {
         id: "user2", // 현재 로그인한 사용자 ID
-        name: "김철수",
+        name: "최민수",
         trustworthiness: 85
       },
       participants: [{
         id: "user2",
-        name: "김철수",
+        name: "최민수",
         joinedAt: new Date().toISOString(),
         trustworthiness: 85,
         verifications: []
@@ -280,7 +282,7 @@ export const CreateStudy = () => {
 
                 <div className="space-y-2">
                   <Label>주최자</Label>
-                  <Input value="김철수 (현재 로그인 사용자)" disabled />
+                  <Input value={name + " (현재 로그인 사용자)"} disabled />
                 </div>
 
                 <div className="flex gap-3 pt-4">

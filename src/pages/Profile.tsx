@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Header } from "../components/Header";
 import { Button } from "@/components/ui/button";
@@ -7,34 +6,94 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrustworthinessDisplay } from "../components/TrustworthinessDisplay";
 import { toast } from "@/hooks/use-toast";
+import { useUser } from "../contexts/UserContext";
 
 export const Profile = () => {
+  const { name, setName, email, setEmail } = useUser();
   const [phoneNumber, setPhoneNumber] = useState("010-1234-5678");
-  const [isEditing, setIsEditing] = useState(false);
-  
-  // Mock user data - in real app, this would come from authentication context
+  const [isEditingPhone, setIsEditingPhone] = useState(false);
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+
+  const [emailInput, setEmailInput] = useState("");
+  const [emailCodeSent, setEmailCodeSent] = useState(false);
+  const [emailCode, setEmailCode] = useState("");
+  const [emailCodeInput, setEmailCodeInput] = useState("");
+  const [emailVerified, setEmailVerified] = useState(false);
+
+  const [phoneInput, setPhoneInput] = useState(phoneNumber);
+  const [phoneCodeSent, setPhoneCodeSent] = useState(false);
+  const [phoneCode, setPhoneCode] = useState("");
+  const [phoneCodeInput, setPhoneCodeInput] = useState("");
+  const [phoneVerified, setPhoneVerified] = useState(false);
+
+  const [nameInput, setNameInput] = useState(name);  
+
   const currentUser = {
-    name: "최민수",
-    email: "minsu@example.com",
+    name,
+    email,
     trustworthiness: 73,
     joinDate: "2024-10-15"
   };
 
-  const handleSave = () => {
-    if (!phoneNumber.trim()) {
-      toast({
-        title: "입력 오류",
-        description: "휴대폰 번호를 입력해주세요.",
-        variant: "destructive"
-      });
+  const handleSaveName = () => {
+    if (!nameInput.trim()) {
+      toast({ title: "입력 오류", description: "이름을 입력해주세요.", variant: "destructive" });
       return;
     }
+    setName(nameInput);
+    setIsEditingName(false);
+    toast({ title: "이름 수정 완료", description: "이름이 성공적으로 수정되었습니다." });
+  };
 
-    toast({
-      title: "정보 수정 완료",
-      description: "휴대폰 번호가 성공적으로 수정되었습니다.",
-    });
-    setIsEditing(false);
+  const handleSendEmailCode = () => {
+    if (!emailInput.trim()) {
+      toast({ title: "입력 오류", description: "이메일을 입력해주세요.", variant: "destructive" });
+      return;
+    }
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    setEmailCode(code);
+    setEmailCodeSent(true);
+    toast({ title: "인증 코드 발송", description: `인증 코드가 ${emailInput}로 발송되었습니다. (mock: ${code})` });
+  };
+
+  const handleVerifyEmailCode = () => {
+    if (emailCodeInput === emailCode) {
+      setEmail(emailInput);
+      setIsEditingEmail(false);
+      setEmailVerified(true);
+      setEmailCodeSent(false);
+      setEmailCode("");
+      setEmailCodeInput("");
+      toast({ title: "이메일 수정 완료", description: "이메일이 성공적으로 수정되었습니다." });
+    } else {
+      toast({ title: "인증 실패", description: "인증 코드가 올바르지 않습니다.", variant: "destructive" });
+    }
+  };
+
+  const handleSendPhoneCode = () => {
+    if (!phoneInput.trim()) {
+      toast({ title: "입력 오류", description: "휴대폰 번호를 입력해주세요.", variant: "destructive" });
+      return;
+    }
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    setPhoneCode(code);
+    setPhoneCodeSent(true);
+    toast({ title: "인증번호 발송", description: `인증번호가 ${phoneInput}로 발송되었습니다. (mock: ${code})` });
+  };
+
+  const handleVerifyPhoneCode = () => {
+    if (phoneCodeInput === phoneCode) {
+      setPhoneNumber(phoneInput);
+      setIsEditingPhone(false);
+      setPhoneVerified(true);
+      setPhoneCodeSent(false);
+      setPhoneCode("");
+      setPhoneCodeInput("");
+      toast({ title: "휴대폰 번호 수정 완료", description: "휴대폰 번호가 성공적으로 수정되었습니다." });
+    } else {
+      toast({ title: "인증 실패", description: "인증번호가 올바르지 않습니다.", variant: "destructive" });
+    }
   };
 
   return (
@@ -59,15 +118,29 @@ export const Profile = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label>이름</Label>
-                    <div className="mt-1 p-2 border rounded-md bg-gray-50">
-                      {currentUser.name}
-                    </div>
+                    <div className="mt-1 p-2 border rounded-md bg-gray-50">{currentUser.name}</div>
                   </div>
                   <div>
                     <Label>이메일</Label>
-                    <div className="mt-1 p-2 border rounded-md bg-gray-50">
-                      {currentUser.email}
-                    </div>
+                    {isEditingEmail ? (
+                      <div className="space-y-2 mt-1">
+                        <Input value={emailInput} onChange={e => setEmailInput(e.target.value)} placeholder="이메일 입력" />
+                        {emailCodeSent ? (
+                          <div className="flex gap-2">
+                            <Input value={emailCodeInput} onChange={e => setEmailCodeInput(e.target.value)} placeholder="인증 코드 입력" />
+                            <Button size="sm" onClick={handleVerifyEmailCode}>확인</Button>
+                          </div>
+                        ) : (
+                          <Button size="sm" onClick={handleSendEmailCode}>인증 코드 발송</Button>
+                        )}
+                        <Button size="sm" variant="outline" onClick={() => setIsEditingEmail(false)}>취소</Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 mt-1">
+                        <div className="p-2 border rounded-md bg-gray-50">{currentUser.email}</div>
+                        <Button size="sm" variant="outline" onClick={() => { setIsEditingEmail(true); setEmailInput(email); }}>수정</Button>
+                      </div>
+                    )}
                   </div>
                   <div>
                     <Label>가입일</Label>
@@ -77,36 +150,26 @@ export const Profile = () => {
                   </div>
                   <div>
                     <Label>휴대폰 번호</Label>
-                    {isEditing ? (
-                      <Input
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        placeholder="010-0000-0000"
-                        className="mt-1"
-                      />
+                    {isEditingPhone ? (
+                      <div className="space-y-2 mt-1">
+                        <Input value={phoneInput} onChange={e => setPhoneInput(e.target.value)} placeholder="010-0000-0000" />
+                        {phoneCodeSent ? (
+                          <div className="flex gap-2">
+                            <Input value={phoneCodeInput} onChange={e => setPhoneCodeInput(e.target.value)} placeholder="인증번호 입력" />
+                            <Button size="sm" onClick={handleVerifyPhoneCode}>확인</Button>
+                          </div>
+                        ) : (
+                          <Button size="sm" onClick={handleSendPhoneCode}>인증번호 발송</Button>
+                        )}
+                        <Button size="sm" variant="outline" onClick={() => setIsEditingPhone(false)}>취소</Button>
+                      </div>
                     ) : (
-                      <div className="mt-1 p-2 border rounded-md bg-gray-50">
-                        {phoneNumber}
+                      <div className="flex items-center gap-2 mt-1">
+                        <div className="p-2 border rounded-md bg-gray-50">{phoneNumber}</div>
+                        <Button size="sm" variant="outline" onClick={() => { setIsEditingPhone(true); setPhoneInput(phoneNumber); }}>수정</Button>
                       </div>
                     )}
                   </div>
-                </div>
-                
-                <div className="flex justify-end gap-2">
-                  {isEditing ? (
-                    <>
-                      <Button variant="outline" onClick={() => setIsEditing(false)}>
-                        취소
-                      </Button>
-                      <Button onClick={handleSave}>
-                        저장
-                      </Button>
-                    </>
-                  ) : (
-                    <Button onClick={() => setIsEditing(true)}>
-                      수정
-                    </Button>
-                  )}
                 </div>
               </CardContent>
             </Card>
