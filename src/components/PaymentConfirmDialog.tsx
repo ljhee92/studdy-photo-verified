@@ -34,6 +34,10 @@ export const PaymentConfirmDialog = ({
     setIsAgreed(false);
   };
 
+  const handleCheckboxChange = (checked: boolean | "indeterminate") => {
+    setIsAgreed(checked === true);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-md">
@@ -81,7 +85,7 @@ export const PaymentConfirmDialog = ({
             <Checkbox 
               id="agree"
               checked={isAgreed}
-              onCheckedChange={setIsAgreed}
+              onCheckedChange={handleCheckboxChange}
             />
             <label 
               htmlFor="agree" 
