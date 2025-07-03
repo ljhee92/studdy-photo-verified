@@ -167,7 +167,7 @@ export const CreateStudy = () => {
                         <SelectValue placeholder="인원 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+                        {Array.from({ length: 9 }, (_, i) => i + 2).map((num) => (
                           <SelectItem key={num} value={num.toString()}>
                             {num}명
                           </SelectItem>
