@@ -201,9 +201,34 @@ export const Profile = () => {
                 </div>
                 <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    신뢰도는 스터디 참여 및 완주 이력, 인증 성실도 등을 종합하여 산출됩니다.
+                    신뢰도는 스터디 참여 및 완주 이력, 인증 성실도 등을 종합하여 산출됩니다.<br/>
                     꾸준한 스터디 참여로 신뢰도를 높여보세요!
                   </p>
+                </div>
+                <div className="mt-6">
+                  <h4 className="font-semibold mb-2 text-gray-800">신뢰도 등급 안내</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <div className="flex flex-col items-center">
+                      <TrustworthinessDisplay score={30} size="md" />
+                      <span className="text-xs mt-1 text-red-500 font-medium">Low</span>
+                      <span className="text-[11px] text-muted-foreground">0~49점</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <TrustworthinessDisplay score={60} size="md" />
+                      <span className="text-xs mt-1 text-yellow-500 font-medium">Moderate</span>
+                      <span className="text-[11px] text-muted-foreground">50~69점</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <TrustworthinessDisplay score={80} size="md" />
+                      <span className="text-xs mt-1 text-green-600 font-medium">Trusted</span>
+                      <span className="text-[11px] text-muted-foreground">70~89점</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <TrustworthinessDisplay score={95} size="md" />
+                      <span className="text-xs mt-1 text-blue-600 font-medium">Verified</span>
+                      <span className="text-[11px] text-muted-foreground">90~100점</span>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
