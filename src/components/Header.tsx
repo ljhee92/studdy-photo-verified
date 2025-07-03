@@ -44,15 +44,6 @@ export const Header = () => {
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={() => navigate('/manage')}
-                className="flex items-center gap-2 text-xs sm:text-base px-2 sm:px-4"
-              >
-                <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
-                스터디 관리
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
                 onClick={() => navigate('/shop')}
                 className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base px-2 sm:px-4"
               >
@@ -85,10 +76,6 @@ export const Header = () => {
                     <Button variant="ghost" className="justify-start gap-3 text-base py-3" onClick={() => navigate('/my-studies')}>
                       <User className="h-5 w-5" />
                       내 스터디
-                    </Button>
-                    <Button variant="ghost" className="justify-start gap-3 text-base py-3" onClick={() => navigate('/manage')}>
-                      <Settings className="h-5 w-5" />
-                      스터디 관리
                     </Button>
                     <Button variant="ghost" className="justify-start gap-3 text-base py-3" onClick={() => navigate('/shop')}>
                       <ShoppingBag className="h-5 w-5" />
