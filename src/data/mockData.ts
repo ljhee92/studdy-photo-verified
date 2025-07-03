@@ -1,4 +1,86 @@
-import { Study } from "../types/study";
+import { Study, ChatMessage } from "../types/study";
+
+// Mock chat messages for different studies
+export const mockChatMessages: Record<string, ChatMessage[]> = {
+  "1": [
+    {
+      id: "msg1",
+      senderId: "user1",
+      senderName: "김개발",
+      message: "안녕하세요! 스프링 부트 스터디에 오신 것을 환영합니다.",
+      timestamp: "2024-12-01T10:00:00Z",
+      type: "text"
+    },
+    {
+      id: "msg2",
+      senderId: "user3",
+      senderName: "박코딩",
+      message: "첫 번째 과제는 언제까지 제출하면 되나요?",
+      timestamp: "2024-12-01T14:30:00Z",
+      type: "text"
+    },
+    {
+      id: "msg3",
+      senderId: "user1",
+      senderName: "김개발",
+      message: "12월 16일까지 제출해주시면 됩니다!",
+      timestamp: "2024-12-01T15:00:00Z",
+      type: "text"
+    }
+  ],
+  "2": [
+    {
+      id: "msg4",
+      senderId: "user7",
+      senderName: "홍프론트",
+      message: "리액트 훅에 대해 질문이 있어요.",
+      timestamp: "2024-12-06T13:30:00Z",
+      type: "text"
+    },
+    {
+      id: "msg5",
+      senderId: "user8",
+      senderName: "강리액트",
+      message: "어떤 부분이 궁금하신가요?",
+      timestamp: "2024-12-06T14:00:00Z",
+      type: "text"
+    }
+  ],
+  "my1": [
+    {
+      id: "msg6",
+      senderId: "user2",
+      senderName: "최민수",
+      message: "오늘 백준 문제 몇 개 풀었어요?",
+      timestamp: "2024-12-01T18:00:00Z",
+      type: "text"
+    },
+    {
+      id: "msg7",
+      senderId: "user11",
+      senderName: "박알고리즘",
+      message: "저는 3문제 풀었습니다! 다들 화이팅!",
+      timestamp: "2024-12-01T19:30:00Z",
+      type: "text"
+    },
+    {
+      id: "msg8",
+      senderId: "user12",
+      senderName: "김문제해결",
+      message: "동적 계획법 문제가 어려워요 ㅠㅠ",
+      timestamp: "2024-12-02T09:15:00Z",
+      type: "text"
+    },
+    {
+      id: "msg9",
+      senderId: "user2",
+      senderName: "최민수",
+      message: "같이 풀어봐요! 스터디 시간에 설명드릴게요.",
+      timestamp: "2024-12-02T10:00:00Z",
+      type: "text"
+    }
+  ]
+};
 
 export const mockStudies: Study[] = [
   {
@@ -53,7 +135,8 @@ export const mockStudies: Study[] = [
         trustworthiness: 59,
         verifications: []
       }
-    ]
+    ],
+    chatMessages: mockChatMessages["1"] || []
   },
   {
     id: "2",
@@ -93,7 +176,8 @@ export const mockStudies: Study[] = [
         trustworthiness: 82,
         verifications: []
       }
-    ]
+    ],
+    chatMessages: mockChatMessages["2"] || []
   },
   {
     id: "3",
@@ -168,7 +252,8 @@ export const mockStudies: Study[] = [
         trustworthiness: 62,
         verifications: []
       }
-    ]
+    ],
+    chatMessages: []
   },
   {
     id: "4",
@@ -250,7 +335,8 @@ export const mockStudies: Study[] = [
         trustworthiness: 86,
         verifications: []
       }
-    ]
+    ],
+    chatMessages: []
   },
   {
     id: "5",
@@ -297,7 +383,8 @@ export const mockStudies: Study[] = [
         trustworthiness: 79,
         verifications: []
       }
-    ]
+    ],
+    chatMessages: []
   }
 ];
 
@@ -400,7 +487,8 @@ export const mockMyStudies: Study[] = [
         trustworthiness: 55,
         verifications: []
       }
-    ]
+    ],
+    chatMessages: mockChatMessages["my1"] || []
   },
   {
     id: "my2",
@@ -483,7 +571,8 @@ export const mockMyStudies: Study[] = [
         trustworthiness: 71,
         verifications: []
       }
-    ]
+    ],
+    chatMessages: []
   },
   {
     id: "my3",
@@ -564,6 +653,7 @@ export const mockMyStudies: Study[] = [
         trustworthiness: 74,
         verifications: []
       }
-    ]
+    ],
+    chatMessages: []
   }
 ];

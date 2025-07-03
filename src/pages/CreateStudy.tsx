@@ -99,7 +99,8 @@ export const CreateStudy = () => {
         joinedAt: new Date().toISOString(),
         trustworthiness: 85,
         verifications: []
-      }]
+      }],
+      chatMessages: [] // Add empty chat messages array
     };
 
     // 스터디 추가
