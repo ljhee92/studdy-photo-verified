@@ -16,6 +16,7 @@ export interface Study {
     trustworthiness: number;
   };
   participants: Participant[];
+  chatMessages: ChatMessage[];
 }
 
 export interface Participant {
@@ -34,4 +35,13 @@ export interface Verification {
   status: 'pending' | 'approved' | 'rejected';
   reviewedBy?: string;
   reviewedAt?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  message: string;
+  timestamp: string;
+  type: 'text' | 'system';
 }

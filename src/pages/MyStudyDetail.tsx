@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
@@ -9,10 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar, Users, DollarSign, Clock, ArrowLeft, Upload, CheckCircle, XCircle, AlertCircle, Banknote, Camera } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, ArrowLeft, Upload, CheckCircle, XCircle, AlertCircle, Banknote, Camera, MessageCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { TrustworthinessDisplay } from "../components/TrustworthinessDisplay";
+import { ChatRoom } from "../components/ChatRoom";
 import { useStudyStore } from "@/store/studyStore";
+import { ChatMessage } from "@/types/study";
 
 export const MyStudyDetail = () => {
   const { studyId } = useParams();
@@ -20,7 +21,7 @@ export const MyStudyDetail = () => {
   const [accountNumber, setAccountNumber] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { getStudyById } = useStudyStore();
+  const { getStudyById, sendMessage } = useStudyStore();
   
   const study = getStudyById(studyId!);
   const currentUserId = "user2"; // This would come from auth context in real app
@@ -65,6 +66,23 @@ export const MyStudyDetail = () => {
 
   const getVerificationText = (days: number) => {
     return days === 1 ? '매일 인증' : `${days}일마다 인증`;
+  };
+
+  const handleSendMessage = (message: string) => {
+    const newMessage: ChatMessage = {
+      id: `msg-${Date.now()}`,
+      senderId: currentUserId,
+      senderName: "사용자2", // This would come from auth context
+      message,
+      timestamp: new Date().toISOString(),
+      type: 'text'
+    };
+
+    sendMessage(study.id, newMessage);
+    toast({
+      title: "메시지 전송 완료",
+      description: "메시지가 전송되었습니다.",
+    });
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,6 +208,10 @@ export const MyStudyDetail = () => {
             <TabsList>
               <TabsTrigger value="verification">인증 관리</TabsTrigger>
               <TabsTrigger value="participants">참여자 목록</TabsTrigger>
+              <TabsTrigger value="chat" className="flex items-center gap-2">
+                <MessageCircle className="h-4 w-4" />
+                채팅
+              </TabsTrigger>
               {isCompleted && canReceiveRefund && (
                 <TabsTrigger value="refund">환급 신청</TabsTrigger>
               )}
@@ -327,6 +349,7 @@ export const MyStudyDetail = () => {
               </Card>
             </TabsContent>
             
+            
             <TabsContent value="participants" className="space-y-4">
               <Card>
                 <CardHeader>
@@ -365,6 +388,14 @@ export const MyStudyDetail = () => {
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="chat">
+              <ChatRoom 
+                messages={study.chatMessages}
+                onSendMessage={handleSendMessage}
+                currentUserId={currentUserId}
+              />
             </TabsContent>
             
             

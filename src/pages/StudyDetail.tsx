@@ -4,7 +4,8 @@ import { Header } from "../components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Users, DollarSign, Clock, User, ArrowLeft, Banknote } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Calendar, Users, DollarSign, Clock, User, ArrowLeft, Banknote, MessageCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { TrustworthinessDisplay } from "../components/TrustworthinessDisplay";
 import { PaymentConfirmDialog } from "../components/PaymentConfirmDialog";
@@ -54,6 +55,15 @@ export const StudyDetail = () => {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
+    });
+  };
+
+  const formatTime = (timestamp: string) => {
+    return new Date(timestamp).toLocaleString('ko-KR', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
@@ -229,6 +239,48 @@ export const StudyDetail = () => {
                         </div>
                       ))}
                     </div>
+                  </div>
+
+                  {/* Chat preview section */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      <MessageCircle className="h-5 w-5" />
+                      소통 중인 내용
+                    </h3>
+                    {study.chatMessages.length > 0 ? (
+                      <Card>
+                        <CardContent className="p-4">
+                          <ScrollArea className="h-40">
+                            <div className="space-y-3">
+                              {study.chatMessages.slice(-5).map((message) => (
+                                <div key={message.id} className="text-sm">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <span className="font-medium text-blue-600">{message.senderName}</span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {formatTime(message.timestamp)}
+                                    </span>
+                                  </div>
+                                  <p className="text-gray-700 pl-2 border-l-2 border-gray-200">
+                                    {message.message}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </ScrollArea>
+                          <div className="mt-3 pt-3 border-t text-center">
+                            <p className="text-xs text-muted-foreground">
+                              스터디에 참여하시면 채팅에 참여할 수 있습니다
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <Card>
+                        <CardContent className="p-4 text-center text-muted-foreground">
+                          <p>아직 채팅 메시지가 없습니다</p>
+                        </CardContent>
+                      </Card>
+                    )}
                   </div>
 
                   {study.status === 'recruiting' && (
